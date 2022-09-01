@@ -9,6 +9,17 @@ const isValidJSON = (str) => {
     }
 }
 
+const parseData = () => {
+    data => {
+        if (isValidJSON(data)) {
+            const parseJSON = JSON.parse(data);
+            document.getElementById('response').innerText = JSON.stringify(parseJSON, null, '\t');  
+        } else {
+            document.getElementById('response').innerText = data;
+        }
+    }
+}
+
 const reqAllUsers = (
     method // GET, POST, DELETE
     ) => {
@@ -20,7 +31,6 @@ const reqAllUsers = (
     fetch(apiURL + '/users/sql/all/', {method: method})
     .then(response => response.text())
     .then(data => {
-            
         if (isValidJSON(data)) {
             const parseJSON = JSON.parse(data);
             document.getElementById('response').innerText = JSON.stringify(parseJSON, null, '\t');  
@@ -36,7 +46,7 @@ const reqAllUsers = (
 
 const requestUserId = (method) => {
     if (!['GET', 'DELETE'].includes(method)) {
-        alert('Invalid method used for request all Users');
+        alert('Invalid method used for request User by ID');
         return;
     }
 
@@ -48,7 +58,6 @@ const requestUserId = (method) => {
     } else if (userId < 1) {
         errorMsg = "Please enter valid user ID. Must be greater than 0";
     }
- 
     if (errorMsg !== '') {
         document.getElementById('userId').value = '';
         document.getElementById('response').innerText = errorMsg;
@@ -75,12 +84,11 @@ const requestUserId = (method) => {
 }
 
 const postNewUser = () => {
+    const name = document.getElementById('name').value;
     const userName = document.getElementById('username').value;
     const userEmail = document.getElementById('email').value;
-    const name = document.getElementById('name').value;
 
-
-    console.log(userName, userEmail);
+    console.log(name, userName, userEmail);
 
     let errorMsg = [];
 
@@ -130,6 +138,26 @@ const postNewUser = () => {
         document.getElementById('email').value = '';
     })
 }
+}
+
+const updateUserById = () => {
+    const name = document.getElementById('name').value;
+    const userName = document.getElementById('username').value;
+    const userEmail = document.getElementById('email').value;
+
+    const userId = parseInt(document.getElementById('userId').value);
+
+    let errorMsg = ''
+    if (isNaN(userId)) {
+        errorMsg = "Please enter a user ID. Must be a number";
+    } else if (userId < 1) {
+        errorMsg = "Please enter valid user ID. Must be greater than 0";
+    }
+    if (errorMsg !== '') {
+        document.getElementById('userId').value = '';
+        document.getElementById('response').innerText = errorMsg;
+        return;
+    }
 }
 
 
