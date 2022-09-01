@@ -77,21 +77,59 @@ const requestUserId = (method) => {
 const postNewUser = () => {
     const userName = document.getElementById('username').value;
     const userEmail = document.getElementById('email').value;
+    const name = document.getElementById('name').value;
+
 
     console.log(userName, userEmail);
 
     let errorMsg = [];
 
+    if (name === '') {
+        errorMsg.push('Please eneter valid name')
     if (userName === '') {
         errorMsg.push('Please eneter valid username')
     }
     if (userEmail === '') {
         errorMsg.push('Please enter valid email')
     }
-
     if (errorMsg.length > 0) {
-        console.log();    
+        console.log(errorMsg);
+        document.getElementById('name').value = '';
+        document.getElementById('username').value = '';
+        document.getElementById('email').value = '';
+        document.getElementById('response').innerText = errorMsg.join('\n');
+        return;  
     }
+        fetch(apiURL + '/users/', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+                name: name,
+                username: userName,
+                email: userEmail
+            })
+        })
+        .then(response => response.text())
+        .then(data => {
+        if (isValidJSON(data)) {
+            const parseJSON = JSON.parse(data);
+            document.getElementById('response').innerText = JSON.stringify(parseJSON, null, '\t')
+        } else {
+            document.getElementById('response').innerText = data;
+        }
+    })
+    .catch(error => {
+        console.log(error);
+        document.getElementById('response').innerText = error;
+    })
+    .finally(() => {
+        document.getElementById('name').value = '';
+        document.getElementById('username').value = '';
+        document.getElementById('email').value = '';
+    })
+}
 }
 
 

@@ -8,17 +8,23 @@
 
 </head>
 <body>
-    <h1>JSON Genesis</h1>
+    <h1>JSON Placeholder</h1>
     <button onclick="reqAllUsers('GET')">Get All Users</button>
     <button onclick="reqAllUsers('POST')">Post All Users</button>
     <button onclick="reqAllUsers('DELETE')">Delete All Users</button>
     <button onclick="clearResponseText()">Clear Response</button>
     <br><br>
-    <input type="text" placeholder="User ID" id="userId">
-    <button onclick="requestUserId('GET')">Get User By ID</button>
-    <input type="'text" placeholder="Username" id="username">
-    <input type="'text" placeholder="Email" id="email">
-    <button onclick="postNewUser()">Create New User</button>
+    <div>
+        <input type="text" placeholder="User ID" id="userId">
+        <button onclick="requestUserId('GET')">Get User By ID</button>
+    </div>
+    <br>
+    <div>
+        <input id="name" type="'text" placeholder="Name"  value="tempName">
+        <input id="username" type="'text" placeholder="Username" value="tempUN" >
+        <input id="email" type="'text" placeholder="Email" value="tempEM">
+        <button onclick="postNewUser()">Create New User</button>
+    </div>
 
     <p id="response"></p>
     <script src="index.js"></script>
