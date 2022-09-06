@@ -15,16 +15,21 @@
     <button onclick="clearResponseText()">Clear Response</button>
     <br><br>
     <div>
-        <input type="text" placeholder="User ID" id="userId">
+        <input id="userId" type="text" placeholder="User ID" >
         <button onclick="requestUserId('GET')">Get User By ID</button>
         <button onclick="requestUserId('DELETE')">Delete User By ID</button>
     </div>
     <br>
+    <button onclick="updateUserById()">Update New User</button>
+    <br><br>
     <div>
         <input id="name" type="'text" placeholder="Name"  value="tempName">
         <input id="username" type="'text" placeholder="Username" value="tempUN" >
         <input id="email" type="'text" placeholder="Email" value="tempEM">
+        <input id="phone" type="'text" placeholder="Phone" value="tempPH">
+        <input id="website" type="'text" placeholder="Website" value="tempWS">
         <button onclick="postNewUser()">Create New User</button>
+
     </div>
 
     <p id="response"></p>
