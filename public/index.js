@@ -31,13 +31,11 @@ const parseData = (data) => {
     }
 }
 
-const reqAllUsers = (
-    method // GET, POST, DELETE
-    ) => {
-        if (!['GET', 'POST', 'DELETE'].includes(method)) {
-            alert('Invalid method used for request all Users');
-            return;
-        }
+const reqAllUsers = (method) => {
+    if (!['GET', 'POST', 'DELETE'].includes(method)) {
+        alert('Invalid method used for request all Users');
+        return;
+    }
 
     fetch(apiURL + '/users/sql/all/', {method: method})
     .then(response => response.text())
@@ -74,121 +72,21 @@ const requestUserId = (method) => {
         console.log(error);
         document.getElementById('response').innerText = error;
     })
-    .finally(() => {
-        document.getElementById('userId').value = '';
-    })
 }
 
-const postNewUser = () => {
+const writeUserData = (method) => {
+    if (!['POST', 'PUT'].includes(method)) {
+        alert('Invalid method used for request User by ID');
+        return;
+    }
+
     const name = document.getElementById('name').value;
     const userName = document.getElementById('username').value;
     const userEmail = document.getElementById('email').value;
     const userPhone = document.getElementById('phone').value;
     const userWebsite = document.getElementById('website').value;
 
-    console.log(name, userName, userEmail, userPhone, userWebsite);
-
-    let errorMsg = [];
-
-    if (name === '') {
-        errorMsg.push('Please eneter valid name')
-    }
-    if (userName === '') {
-        errorMsg.push('Please eneter valid username')
-    }
-    if (userEmail === '') {
-        errorMsg.push('Please enter valid email')
-    }
-    if (userPhone === '') {
-        errorMsg.push('Please enter valid phone number')
-    }
-    if (userWebsite === '') {
-        errorMsg.push('Please enter valid website')
-    }
-    if (errorMsg.length > 0) {
-        console.log(errorMsg);
-        document.getElementById('name').value = '';
-        document.getElementById('username').value = '';
-        document.getElementById('email').value = '';
-        document.getElementById('phone').value = '';
-        document.getElementById('website').value = '';
-        document.getElementById('response').innerText = errorMsg.join('\n');
-        return;  
-    }
-    fetch(apiURL + '/users/', {
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/json'
-        },
-        body: JSON.stringify({
-            name: name,
-            username: userName,
-            email: userEmail,
-            phone: userPhone,
-            website: userWebsite
-        })
-    })
-    .then(response => response.text())
-    .then(parseData)
-    .catch(error => {
-        console.log(error);
-        document.getElementById('response').innerText = error;
-    })
-    .finally(() => {
-        document.getElementById('name').value = '';
-        document.getElementById('username').value = '';
-        document.getElementById('email').value = '';
-        document.getElementById('phone').value = '';
-        document.getElementById('website').value = '';
-    })
-}
-
-const updateUserById = () => {
-    const name = document.getElementById('name').value;
-    const userName = document.getElementById('username').value;
-    const userEmail = document.getElementById('email').value;
-    const userPhone = document.getElementById('phone').value;
-    const userWebsite = document.getElementById('website').value;
-    const userId = parseInt(document.getElementById('userId').value);
-
-    let errorMsg = [];
-
-    if (name === '') {
-        errorMsg.push('Please eneter valid name')
-    }
-    if (userName === '') {
-        errorMsg.push('Please eneter valid username')
-    }
-    if (userEmail === '') {
-        errorMsg.push('Please enter valid email')
-    }
-    if (userPhone === '') {
-        errorMsg.push('Please enter valid phone number')
-    }
-    if (userWebsite === '') {
-        errorMsg.push('Please enter valid website')
-    }
-
-    if (isNaN(userId)) {
-        errorMsg.push("Please enter a user ID. Must be a number");
-    } else if (userId < 1) {
-        errorMsg.push("Please enter valid user ID. Must be greater than 0");
-    }
-
-    if (errorMsg.length > 0) {
-        console.log(errorMsg);
-        document.getElementById('name').value = '';
-        document.getElementById('username').value = '';
-        document.getElementById('email').value = '';
-        document.getElementById('phone').value = '';
-        document.getElementById('website').value = '';
-        document.getElementById('response').innerText = errorMsg.join('\n');
-        return;  
-    }
-
-    const updateURL = apiURL + '/users/sql/' + userId;
-    const updateBody = {
-        id: userId,
+    const userBody = {
         name: name,
         username: userName,
         email: userEmail,
@@ -196,15 +94,46 @@ const updateUserById = () => {
         website: userWebsite
     }
 
-    console.log(updateURL, updateBody);
-    console.log(JSON.stringify(updateBody));
+    let errorMsg = [];
 
-    fetch(`${apiURL}/users/sql/${userId}`, {
-        method: 'PUT',
+    if (name === '') {
+        errorMsg.push('Please enter valid name')
+    }
+    if (userName === '') {
+        errorMsg.push('Please enter valid username')
+    }
+    if (userEmail === '') {
+        errorMsg.push('Please enter valid email')
+    }
+    if (userPhone === '') {
+        errorMsg.push('Please enter valid phone number')
+    }
+    if (userWebsite === '') {
+        errorMsg.push('Please enter valid website')
+    }
+    if (method === 'PUT') {
+        userBody.id = parseInt(document.getElementById('userId').value);
+        if (isNaN(userBody.id)) {
+            errorMsg = 'Please enter a valid user ID. Must be a number';
+        } else if (userBody.id < 1) {
+            errorMsg = 'Please enter a valid user ID. Must be greater than 0';
+        }
+    }
+
+    if (errorMsg.length > 0) {
+        console.log(errorMsg);
+        document.getElementById('response').innerText = errorMsg;
+        return;  
+    }
+
+    const requestURL = apiURL + '/users' + (method === 'PUT' ? '/sql/' + userBody.id : '');
+
+    fetch(requestURL, {
+        method: method,
         headers: {
             'Content-Type': 'application/json'
         },
-        body: JSON.stringify(updateBody)
+        body: JSON.stringify(userBody)
     })
     .then(response => response.text())
     .then(parseData)
@@ -212,11 +141,103 @@ const updateUserById = () => {
         console.log(error);
         document.getElementById('response').innerText = error;
     })
-    .finally(() => {
-        document.getElementById('name').value = '';
-        document.getElementById('username').value = '';
-        document.getElementById('email').value = '';
-        document.getElementById('phone').value = '';
-        document.getElementById('website').value = '';
+}
+
+
+const reqAllPosts = (method) => {
+    if (!['GET', 'POST', 'DELETE'].includes(method)) {
+        alert('Invalid method used for request all Posts');
+        return;
+    }
+
+    fetch(apiURL + '/posts/sql/all/', {method: method})
+    .then(response => response.text())
+    .then(parseData)
+    .catch(error => {
+        console.log(error)
+        document.getElementById('response').innerText = error
+    });
+}
+
+const requestPostId = (method) => {
+    if (!['GET', 'DELETE'].includes(method)) {
+        alert('Invalid method used for request Post by ID');
+        return;
+    }
+
+    const postId = parseInt(document.getElementById('postId').value);
+
+    let errorMsg = ''
+    if (isNaN(postId)) {
+        errorMsg = "Please enter a post ID. Must be a number";
+    } else if (postId < 1) {
+        errorMsg = "Please enter valid post ID. Must be greater than 0";
+    }
+    if (errorMsg !== '') {
+        document.getElementById('response').innerText = errorMsg;
+        return;
+    }
+
+    fetch(apiURL + '/posts/sql/' + postId, {method: method})
+    .then(response => response.text())
+    .then(parseData)
+    .catch(error => {
+        console.log(error);
+        document.getElementById('response').innerText = error;
+    })
+}
+
+const writePostData = (method) => {
+    if (!['POST', 'PUT'].includes(method)) {
+        alert('Invalid method used for request Post by ID');
+        return;
+    }
+
+    const title = document.getElementById('title').value;
+    const body = document.getElementById('body').value;
+
+    const postBody = {
+        title: title,
+        body: body,
+    }
+
+    let errorMsg = [];
+
+    if (title === '') {
+        errorMsg.push('Please enter valid title')
+    }
+    if (body === '') {
+        errorMsg.push('Please enter valid body')
+    }
+    
+    if (method === 'PUT') {
+        postBody.id = parseInt(document.getElementById('postId').value);
+        if (isNaN(postBody.id)) {
+            errorMsg = 'Please enter a valid post ID. Must be a number';
+        } else if (postBody.id < 1) {
+            errorMsg = 'Please enter a valid post ID. Must be greater than 0';
+        }
+    }
+
+    if (errorMsg.length > 0) {
+        console.log(errorMsg);
+        document.getElementById('response').innerText = errorMsg;
+        return;  
+    }
+
+    const requestURL = apiURL + '/posts' + (method === 'PUT' ? '/sql/' + postBody.id : '');
+
+    fetch(requestURL, {
+        method: method,
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(postBody)
+    })
+    .then(response => response.text())
+    .then(parseData)
+    .catch(error => {
+        console.log(error);
+        document.getElementById('response').innerText = error;
     })
 }

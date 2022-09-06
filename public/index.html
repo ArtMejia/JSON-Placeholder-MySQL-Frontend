@@ -9,10 +9,13 @@
 </head>
 <body>
     <h1>JSON Placeholder</h1>
+    <h2>USER</h2>
     <button onclick="reqAllUsers('GET')">Get All Users</button>
     <button onclick="reqAllUsers('POST')">Post All Users</button>
     <button onclick="reqAllUsers('DELETE')">Delete All Users</button>
     <button onclick="clearResponseText()">Clear Response</button>
+    <button onclick="clearInputs()">Clear Inputs</button>
+
     <br><br>
     <div>
         <input id="userId" type="text" placeholder="User ID" >
@@ -20,17 +23,40 @@
         <button onclick="requestUserId('DELETE')">Delete User By ID</button>
     </div>
     <br>
-    <button onclick="updateUserById()">Update New User</button>
+    <button onclick="writeUserData('PUT')">Update New User</button>
     <br><br>
     <div>
-        <input id="name" type="'text" placeholder="Name"  value="tempName">
+        <input id="name" type="'text" placeholder="Name" value="tempName">
         <input id="username" type="'text" placeholder="Username" value="tempUN" >
         <input id="email" type="'text" placeholder="Email" value="tempEM">
         <input id="phone" type="'text" placeholder="Phone" value="tempPH">
         <input id="website" type="'text" placeholder="Website" value="tempWS">
-        <button onclick="postNewUser()">Create New User</button>
+        <button onclick="writeUserData('POST')">Create New User</button>
 
     </div>
+    <br><br>
+
+    <h2>POST</h2>
+    <button onclick="reqAllPosts('GET')">Get All Post</button>
+    <button onclick="reqAllPosts('POST')">Post All Post</button>
+    <button onclick="reqAllPosts('DELETE')">Delete All Post</button>
+    <button onclick="clearResponseText()">Clear Response</button>
+    <br><br>
+    <div>
+        <input id="postId" type="text" placeholder="Post ID" >
+        <button onclick="requestPostId('GET')">Get Post By ID</button>
+        <button onclick="requestPostId('DELETE')">Delete Post By ID</button>
+    </div>
+    <br>
+    <button onclick="writePostData('PUT')">Update New Post</button>
+    <br><br>
+    <div>
+        <input id="title" type="'text" placeholder="Title" value="tempTitle">
+        <input id="body" type="'text" placeholder="Body" value="tempBody" >
+        <button onclick="writePostData('POST')">Create New Post</button>
+
+    </div>
+    <br><br>
 
     <p id="response"></p>
     <script src="index.js"></script>
